@@ -39,3 +39,10 @@ class TSNSelector(FrameSelector):
         return selected
 
 
+if __name__ == "__main__":
+    fixed = FixedFrameSelector(5)
+    print(fixed.select(100,5))
+    
+    tsn = TSNSelector(5,False)
+    print(tsn.select(100,5))   
+    

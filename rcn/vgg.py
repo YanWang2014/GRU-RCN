@@ -1,6 +1,7 @@
 import torch.nn as nn
 from torchvision.models import VGG
-from .rcn import *
+from rcn import *
+#import rcn
 from itertools import chain
 
 
@@ -82,3 +83,13 @@ class VGGGRU(nn.Module):
             out = self._dropout(out)
         out = self._classifier(out)
         return out
+    
+    
+if __name__ == "__main__":    
+    from torchvision.models.vgg import *
+    base_model = vgg11_bn(pretrained=True)
+    modify_layers = [3,5,7]
+    model = VGGGRU(base_model, modify_layers, 101, only_last=False, dropout=0.5)
+    
+    print(model._cell)
+    print(model._cell._isrcn)

@@ -20,3 +20,10 @@ class ScaleJittering(object):
             trans.Resize(self.size)
         ])
         return t(img)
+
+'''
+TSN paper: 
+    fix the size of input image as 256×340, and the width and height of cropped region
+    are randomly selected from {256, 224, 192, 168}. Finally, these cropped regions
+    will be resized to 224 × 224 for network training
+'''

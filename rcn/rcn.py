@@ -373,21 +373,28 @@ class Bottleneck(nn.Module):
         return out
 
 
-'''
-# test
+
 if __name__ == '__main__':
-    gru_rcn = BottleneckGRURCNCell(64)
-    print(gru_rcn)
-
     from torch.autograd import Variable
-    x = Variable(torch.rand(10, 64, 32, 32))
-    h = Variable(torch.rand(10, 64, 32, 32))
-    gru_rcn(x, h)
-
-    gru_rcn = BottleneckGRURCNCell(64, 32, 2)
-    print(gru_rcn)
-
-    x = Variable(torch.rand(10, 32, 64, 64))
-    h = Variable(torch.rand(10, 64, 32, 32))
-    gru_rcn(x, h)
-'''
+    x = Variable(torch.rand(64, 4, 3, 32, 32))
+    seq = []
+    seq.append(x)
+    seq.append(x)
+    print(torch.stack(seq, dim=1).size())
+    print(torch.stack(seq).size())
+    print(torch.mean(torch.stack(seq), dim=0).size())
+    
+#    gru_rcn = BottleneckGRURCNCell(64)
+#    print(gru_rcn)
+#
+#    from torch.autograd import Variable
+#    x = Variable(torch.rand(10, 64, 32, 32))
+#    h = Variable(torch.rand(10, 64, 32, 32))
+#    gru_rcn(x, h)
+#
+#    gru_rcn = BottleneckGRURCNCell(64, 32, 2)
+#    print(gru_rcn)
+#
+#    x = Variable(torch.rand(10, 32, 64, 64))
+#    h = Variable(torch.rand(10, 64, 32, 32))
+#    gru_rcn(x, h)

@@ -40,7 +40,10 @@ class UCF101Folder(Dataset):
 
         imgs = []
         part = ['01', '02', '03'][split - 1]
-        for line in open(os.path.join(split_root, mode + 'list' + part + '.txt'), 'r'):
+        
+        self.split_file = os.path.join(split_root, mode + 'list' + part + '.txt')
+        
+        for line in open(self.split_file, 'r'):
             l = line.strip().split(' ')[0].split('/')
             path = os.path.join(data_root, *l)
             imgs.append((path, class_to_idx[l[0]]))
@@ -71,3 +74,44 @@ class UCF101Folder(Dataset):
 
     def __len__(self):
         return len(self.imgs)
+    
+    
+if __name__ == "__main__":    
+    import selector
+    import torchvision.transforms as transforms
+    from torch.utils.data import DataLoader
+
+    train_selector = TSNSelector(5)
+    train_traintrans = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.ToTensor(),
+        ])
+    train_dataset = UCF101Folder('../../UCF101/UCF-101',
+                                 '../../UCF101/ucfTrainTestlist',
+                                 'test', train_selector, transform=train_traintrans, split=1)
+    print(train_dataset.split_file)
+    
+    dataloader = DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=2)    
+    print(len(dataloader))
+    
+    
+    img_batch, labels = next(iter(dataloader))
+    print(type(img_batch))
+    print(img_batch.shape)  # torch.Size([2, 5, 3, 240, 320])
+    print(labels.shape)
+    
+    import matplotlib.pyplot as plt
+    
+    def imshow(inp, title=None):
+        inp = inp.numpy().transpose((1, 2, 0))
+        plt.figure()
+        plt.imshow(inp)
+        plt.pause(1)
+        
+    imshow(img_batch[0,0,:,:,:])
+    imshow(img_batch[0,1,:,:,:])
+    imshow(img_batch[0,2,:,:,:])
+    
+    imshow(img_batch[1,0,:,:,:])
+    imshow(img_batch[1,1,:,:,:])
+    imshow(img_batch[1,2,:,:,:])

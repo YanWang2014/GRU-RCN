@@ -40,7 +40,7 @@ if use_multi_gpu:
 
 # data loader
 train_selector = TSNSelector(seq_len)
-train_traintrans = transforms.Compose([
+train_trans = transforms.Compose([
         transforms.ToPILImage(),
         transforms.ColorJitter(),
         ScaleJittering(224),
@@ -50,7 +50,7 @@ train_traintrans = transforms.Compose([
     ])
 train_dataset = UCF101Folder('/home/member/fuwang/data/UCF101/UCF-101',
                              '/home/member/fuwang/data/UCF101/ucfTrainTestlist',
-                             'train', train_selector, transform=train_traintrans)
+                             'train', train_selector, transform=train_trans)
 train_loader = DataLoader(train_dataset, batch_size, True, num_workers=8, pin_memory=use_gpu)
 
 trans_crop = transforms.Compose([
@@ -58,15 +58,14 @@ trans_crop = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 test_selector = TSNSelector(seq_len, random=False)
-train_traintrans = transforms.Compose([
+test_trans = transforms.Compose([
         transforms.ToPILImage(),
-        transforms.ColorJitter(),
         transforms.TenCrop(224),
         transforms.Lambda(lambda crops: torch.stack([trans_crop(crop) for crop in crops]))
     ])
 test_dataset = UCF101Folder('/home/member/fuwang/data/UCF101/UCF-101',
                             '/home/member/fuwang/data/UCF101/ucfTrainTestlist',
-                            'test', test_selector, transform=train_traintrans)
+                            'test', test_selector, transform=test_trans)
 test_loader = DataLoader(test_dataset, test_batch_size, False, num_workers=8, pin_memory=use_gpu)
 
 
